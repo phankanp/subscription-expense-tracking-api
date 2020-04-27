@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.7.5"
+  - '3.7.5'
 
 services:
   - docker
@@ -8,4 +8,7 @@ services:
 before_script: pip install docker-compose
 
 script:
-  - docker-compose run app sh -c "python manage.py test && flake8"
+  - docker-compose run app sh -c "pytest -p no:warnings --cov=."
+  - docker-compose run app sh -c "flake8 ."
+  - docker-compose run app sh -c "black --check --exclude=migrations ."
+  - docker-compose run app sh -c "isort ./*/*.py --check-only"

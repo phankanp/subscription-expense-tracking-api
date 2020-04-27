@@ -10,5 +10,5 @@ before_script: pip install docker-compose
 script:
   - docker-compose run app sh -c "pytest -p no:warnings --cov=."
   - docker-compose run app sh -c "flake8 ."
-  - docker-compose run app sh -c "black --check --exclude=migrations ."
+  - docker-compose run app sh -c "black --exclude=migrations ."
   - docker-compose run app sh -c "isort ./*/*.py --check-only"

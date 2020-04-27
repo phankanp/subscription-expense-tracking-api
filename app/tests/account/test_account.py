@@ -41,7 +41,7 @@ class TestAuthentication:
     def test_user_can_log_in(self, client, create_user):
         user = create_user
         response = client.post(
-            reverse("log_in"), data={"email": user.email, "password": PASSWORD, }
+            reverse("log_in"), data={"email": user.email, "password": PASSWORD,}
         )
 
         access = response.data["access"]

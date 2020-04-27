@@ -1,43 +1,38 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
 from django.utils import timezone
+
 from .managers import CustomUserManger
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(
-        verbose_name='email address', max_length=255, unique=True
-    )
+    email = models.EmailField(verbose_name="email address", max_length=255, unique=True)
     # password field supplied by AbstractBaseUser
     # last_login field supplied by AbstractBaseUser
-    first_name = models.CharField(
-        verbose_name='first name', max_length=50, blank=True)
-    last_name = models.CharField(
-        verbose_name='last name', max_length=50, blank=True)
+    first_name = models.CharField(verbose_name="first name", max_length=50, blank=False)
+    last_name = models.CharField(verbose_name="last name", max_length=50, blank=False)
 
     is_active = models.BooleanField(
-        'active',
+        "active",
         default=True,
-        help_text='Designates whether this user should be treated as active. '
-        'Unselect this instead of deleting accounts.',
+        help_text="Designates whether this user should be treated as active. "
+        "Unselect this instead of deleting accounts.",
     )
     is_staff = models.BooleanField(
-        'staff status',
+        "staff status",
         default=False,
-        help_text='Designates whether the user can log into this admin site.',
+        help_text="Designates whether the user can log into this admin site.",
     )
     # is_superuser field provided by PermissionsMixin
     # groups field provided by PermissionsMixin
     # user_permissions field provided by PermissionsMixin
 
-    date_joined = models.DateTimeField(
-        'date joined', default=timezone.now
-    )
+    date_joined = models.DateTimeField("date joined", default=timezone.now)
 
     objects = CustomUserManger()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name", "last_name"]
 
     def get_full_name(self):
         """

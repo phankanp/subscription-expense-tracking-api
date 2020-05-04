@@ -10,16 +10,22 @@ services:
       - '8000:8000'
     env_file:
       - ./app/.env.dev
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
     depends_on:
       - app-db
   app-db:
     image: postgres:12-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+
     environment:
       - POSTGRES_USER=tracker
       - POSTGRES_PASSWORD=tracker
       - POSTGRES_DB=tracker_dev
+      - USE_S3=TRUE
 
 volumes:
   postgres_data:

@@ -13,6 +13,9 @@ PASSWORD = "pAssw0rd!"
 
 @pytest.fixture()
 def create_user(email="user@example.com", password=PASSWORD):
+    """
+    Creates a new user
+    """
     return get_user_model().objects.create_user(
         email=email, first_name="Test", last_name="User", password=password
     )
@@ -21,6 +24,9 @@ def create_user(email="user@example.com", password=PASSWORD):
 @pytest.mark.django_db
 class TestAuthentication:
     def test_user_can_sign_up(self, client):
+        """
+        Test for user registration
+        """
         response = client.post(
             reverse("sign_up"),
             data={
@@ -39,6 +45,9 @@ class TestAuthentication:
         assert response.data["last_name"] == user.last_name
 
     def test_user_can_log_in(self, client, create_user):
+        """
+        Test for user login
+        """
         user = create_user
         response = client.post(
             reverse("log_in"), data={"email": user.email, "password": PASSWORD}

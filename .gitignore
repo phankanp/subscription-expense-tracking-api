@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 .env
-app/.env.dev
+# app/.env.dev

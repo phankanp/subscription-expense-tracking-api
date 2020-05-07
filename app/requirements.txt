@@ -14,3 +14,4 @@ django-storages==1.9.1
 boto3==1.12.49
 celery==4.4.1
 redis==3.4.1
+drf-yasg==1.17.1

@@ -40,6 +40,10 @@ def add_subscription():
 
 @pytest.fixture()
 def get_subcriptions_by_date():
+    """
+    Get all subscriptions by length from current date
+    """
+
     def _get_subcriptions_by_date(self, subsction_days_length):
         subs = Command.check_subscriptions(self, subsction_days_length)
         return subs
@@ -52,6 +56,9 @@ class TestEmailReminder:
     def test_command_output_one_week_away(
         self, create_user, add_subscription, get_subcriptions_by_date
     ):
+        """
+        Test custom admin commend for subscriptions one week away
+        """
         date_now = datetime.now()
         date_one_week = date_now + timedelta(weeks=1)
         subscriptions_week_away = Subscription.objects.filter(start_date=date_one_week)
@@ -79,6 +86,9 @@ class TestEmailReminder:
     def test_command_output_two_days_away(
         self, create_user, add_subscription, get_subcriptions_by_date
     ):
+        """
+        Test custom admin commend for subscriptions two days away
+        """
         date_now = datetime.now()
         date_two_days = date_now + timedelta(days=2)
         subscriptions_two_days_away = Subscription.objects.filter(

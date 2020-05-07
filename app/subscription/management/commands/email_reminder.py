@@ -10,7 +10,9 @@ class Command(BaseCommand):
     help = "Send subscription reminder"
 
     def check_subscriptions(self, upcoming_subscriptions):
-
+        """
+        Checks and maps upcoming subscriptions by user
+        """
         subscriptions = {}
 
         for sub in upcoming_subscriptions:
@@ -22,6 +24,10 @@ class Command(BaseCommand):
         return subscriptions
 
     def handle(self, *args, **options):
+        """
+        Sends email to each user with upcoming subscription payments
+        """
+
         date_now = datetime.now()
         date_one_week = date_now + timedelta(weeks=1)
         date_two_days = date_now + timedelta(days=2)

@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 from io import StringIO
 
 from subscription.models import Subscription
+from subscription.management.commands.email_reminder import Command
 
 import pytest
 
@@ -37,11 +38,23 @@ def add_subscription():
     return _add_subscription
 
 
+@pytest.fixture()
+def get_subcriptions_by_date():
+    def _get_subcriptions_by_date(self, subsction_days_length):
+        subs = Command.check_subscriptions(self, subsction_days_length)
+        return subs
+
+    return _get_subcriptions_by_date
+
+
 @pytest.mark.django_db
 class TestEmailReminder:
-    def test_command_output_one_week_away(self, create_user, add_subscription):
+    def test_command_output_one_week_away(
+        self, create_user, add_subscription, get_subcriptions_by_date
+    ):
         date_now = datetime.now()
         date_one_week = date_now + timedelta(weeks=1)
+        subscriptions_week_away = Subscription.objects.filter(start_date=date_one_week)
 
         user = create_user
 
@@ -53,13 +66,24 @@ class TestEmailReminder:
             created_by=user,
         )
 
+        subs = get_subcriptions_by_date(self, subscriptions_week_away)
+        assert len(subs) is not None
+        assert (
+            subs["user@example.com"] == "Your Spotify will be renewed on 2020-05-14 \n"
+        )
+
         out = StringIO()
         call_command("email_reminder", stdout=out)
         assert out.getvalue() == "E-mail Report was sent.\n"
 
-    def test_command_output_two_days_away(self, create_user, add_subscription):
+    def test_command_output_two_days_away(
+        self, create_user, add_subscription, get_subcriptions_by_date
+    ):
         date_now = datetime.now()
         date_two_days = date_now + timedelta(days=2)
+        subscriptions_two_days_away = Subscription.objects.filter(
+            start_date=date_two_days
+        )
 
         user = create_user
 
@@ -69,6 +93,12 @@ class TestEmailReminder:
             start_date=date_two_days,
             renewal_cycle_days=30,
             created_by=user,
+        )
+
+        subs = get_subcriptions_by_date(self, subscriptions_two_days_away)
+        assert len(subs) is not None
+        assert (
+            subs["user@example.com"] == "Your Spotify will be renewed on 2020-05-09 \n"
         )
 
         out = StringIO()

@@ -9,6 +9,18 @@ from subscription.models import Subscription
 class Command(BaseCommand):
     help = "Send subscription reminder"
 
+    def check_subscriptions(self, upcoming_subscriptions):
+
+        subscriptions = {}
+
+        for sub in upcoming_subscriptions:
+            subscriptions[sub.created_by.email] = (
+                subscriptions.get(sub.created_by.email, "")
+                + f"Your {sub.title} will be renewed on {sub.start_date} \n"
+            )
+
+        return subscriptions
+
     def handle(self, *args, **options):
         date_now = datetime.now()
         date_one_week = date_now + timedelta(weeks=1)
@@ -18,49 +30,24 @@ class Command(BaseCommand):
             start_date=date_two_days
         )
 
-        subs_week_away = {}
-        subs_two_days_away = {}
+        subs_week_away = self.check_subscriptions(subscriptions_week_away)
 
-        if subscriptions_week_away:
-            for sub in subscriptions_week_away:
-                if sub.created_by.email not in subs_week_away:
-                    subs_week_away[
-                        sub.created_by.email
-                    ] = f"Your {sub.title} will be renewed on {sub.start_date} \n"
-                else:
-                    all_subs = subs_week_away.get(sub.created_by.email)
-                    subs_week_away[sub.created_by.email] = (
-                        all_subs
-                        + f"Your {sub.title} will be renewed on {sub.start_date} \n"
-                    )
+        for email in subs_week_away.keys():
+            message = "Upcoming payment dates: \n" + subs_week_away[email]
 
-            for email in subs_week_away.keys():
-                message = "Upcoming payment dates: \n" + subs_week_away[email]
+            subject = "Upcoming subscription renewals in one week!"
 
-                subject = "Upcoming subscription renewals in one week!"
-
-                send_mail(subject, message, "noreply@email.com", [email])
+            send_mail(subject, message, "noreply@email.com", [email])
 
             self.stdout.write("E-mail Report was sent.")
 
-        if subscriptions_two_days_away:
-            for sub in subscriptions_two_days_away:
-                if sub.created_by.email not in subs_two_days_away:
-                    subs_two_days_away[
-                        sub.created_by.email
-                    ] = f"Your {sub.title} will be renewed on {sub.start_date} \n"
-                else:
-                    all_subs = subs_two_days_away.get(sub.created_by.email)
-                    subs_two_days_away[sub.created_by.email] = (
-                        all_subs
-                        + f"Your {sub.title} will be renewed on {sub.start_date} \n"
-                    )
+        subs_two_days_away = self.check_subscriptions(subscriptions_two_days_away)
 
-            for email in subs_two_days_away.keys():
-                message = "Upcoming payment dates: \n" + subs_two_days_away[email]
+        for email in subs_two_days_away.keys():
+            message = "Upcoming payment dates: \n" + subs_two_days_away[email]
 
-                subject = "REMINDER!!! Upcoming subscription renewals in two days!"
+            subject = "REMINDER!!! Upcoming subscription renewals in two days!"
 
-                send_mail(subject, message, "noreply@email.com", [email])
+            send_mail(subject, message, "noreply@email.com", [email])
 
-                self.stdout.write("E-mail Report was sent.")
+            self.stdout.write("E-mail Report was sent.")

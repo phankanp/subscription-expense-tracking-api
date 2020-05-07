@@ -1,16 +1,9 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
+
+from app.permissions import IsCreator
 
 from .models import Expense
 from .serializers import ExpenseSerializer
-
-
-class IsCreator(permissions.BasePermission):
-    """
-    Object-level permission to only allow creators of an object to edit it.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        return obj.created_by == request.user
 
 
 class ExpenseList(generics.ListCreateAPIView):

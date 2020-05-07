@@ -16,6 +16,27 @@ services:
       - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
     depends_on:
       - app-db
+      - redis
+  redis:
+    image: redis:alpine
+  celery:
+    build: ./app
+    command: celery -A app worker -l info
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./app/.env.dev
+    depends_on:
+      - redis
+  celery-beat:
+    build: ./app
+    command: celery -A app beat -l info
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./app/.env.dev
+    depends_on:
+      - redis
   app-db:
     image: postgres:12-alpine
     volumes:

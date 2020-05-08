@@ -57,7 +57,7 @@ class TestEmailReminder:
         self, create_user, add_subscription, get_subcriptions_by_date
     ):
         """
-        Test custom admin commend for subscriptions one week away
+        Test custom admin command for subscriptions one week away
         """
         date_now = datetime.now()
         date_one_week = date_now + timedelta(weeks=1)
@@ -76,7 +76,7 @@ class TestEmailReminder:
         subs = get_subcriptions_by_date(self, subscriptions_week_away)
         assert len(subs) is not None
         assert (
-            subs["user@example.com"] == "Your Spotify will be renewed on 2020-05-14 \n"
+            subs["user@example.com"] == "Your Spotify will be renewed on " + str(date_one_week)[:10] + " \n"
         )
 
         out = StringIO()
@@ -87,7 +87,7 @@ class TestEmailReminder:
         self, create_user, add_subscription, get_subcriptions_by_date
     ):
         """
-        Test custom admin commend for subscriptions two days away
+        Test custom admin command for subscriptions two days away
         """
         date_now = datetime.now()
         date_two_days = date_now + timedelta(days=2)
@@ -108,7 +108,7 @@ class TestEmailReminder:
         subs = get_subcriptions_by_date(self, subscriptions_two_days_away)
         assert len(subs) is not None
         assert (
-            subs["user@example.com"] == "Your Spotify will be renewed on 2020-05-09 \n"
+            subs["user@example.com"] == "Your Spotify will be renewed on " + str(date_two_days)[:10] + " \n"
         )
 
         out = StringIO()

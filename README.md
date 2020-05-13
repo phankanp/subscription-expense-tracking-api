@@ -1,6 +1,6 @@
 # Subscription and Expense Tracking API
 
-[![Build Status](https://travis-ci.com/phankanp/project-manage-api.svg?token=ytdJcbtG5BfMjpC6XMjT&branch=master)](https://travis-ci.com/phankanp/project-manage-api) ![Coverage](https://res.cloudinary.com/djmrmontu/image/upload/v1588908428/SubExpense%20Tracking%20App/coverage_jubxwu.svg)
+[![Build Status](https://travis-ci.com/phankanp/subscription-expense-tracking-api.svg?token=ytdJcbtG5BfMjpC6XMjT&branch=master)](https://travis-ci.com/phankanp/subscription-expense-tracking-api) ![Coverage](https://res.cloudinary.com/djmrmontu/image/upload/v1588908428/SubExpense%20Tracking%20App/coverage_jubxwu.svg)
 
 ### Project Details
   - Developed an API for a subscription and expense tracking app

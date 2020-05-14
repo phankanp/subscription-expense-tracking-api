@@ -23,6 +23,16 @@ class Command(BaseCommand):
 
         return subscriptions
 
+    def update_subscription_date(self, upcoming_subscriptions):
+        """
+        Updates subscription date for subscriptions that are two days away
+        """
+        for sub in upcoming_subscriptions:
+            next_renew_date = sub.start_date + timedelta(days=sub.renewal_cycle_days)
+            sub.start_date = next_renew_date
+
+            sub.save()
+
     def handle(self, *args, **options):
         """
         Sends email to each user with upcoming subscription payments
@@ -48,6 +58,8 @@ class Command(BaseCommand):
             self.stdout.write("E-mail Report was sent.")
 
         subs_two_days_away = self.check_subscriptions(subscriptions_two_days_away)
+
+        self.update_subscription_date(subscriptions_two_days_away)
 
         for email in subs_two_days_away.keys():
             message = "Upcoming payment dates: \n" + subs_two_days_away[email]

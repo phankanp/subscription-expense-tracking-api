@@ -76,7 +76,8 @@ class TestEmailReminder:
         subs = get_subcriptions_by_date(self, subscriptions_week_away)
         assert len(subs) is not None
         assert (
-            subs["user@example.com"] == "Your Spotify will be renewed on " + str(date_one_week)[:10] + " \n"
+            subs["user@example.com"]
+            == "Your Spotify will be renewed on " + str(date_one_week)[:10] + " \n"
         )
 
         out = StringIO()
@@ -108,9 +109,14 @@ class TestEmailReminder:
         subs = get_subcriptions_by_date(self, subscriptions_two_days_away)
         assert len(subs) is not None
         assert (
-            subs["user@example.com"] == "Your Spotify will be renewed on " + str(date_two_days)[:10] + " \n"
+            subs["user@example.com"]
+            == "Your Spotify will be renewed on " + str(date_two_days)[:10] + " \n"
         )
 
         out = StringIO()
         call_command("email_reminder", stdout=out)
         assert out.getvalue() == "E-mail Report was sent.\n"
+
+        updated_sub = Subscription.objects.filter(created_by=user)
+        assert_date = date_two_days + timedelta(days=30)
+        assert updated_sub[0].start_date == datetime.date(assert_date)
